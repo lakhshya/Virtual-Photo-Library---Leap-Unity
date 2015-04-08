@@ -39,18 +39,14 @@ public class PageScript : MonoBehaviour
 
 		if (imgNameFront != null) {
 			imgFront = this.transform.Find ("Image Front").gameObject;
-			Texture2D tex1 = Resources.Load (imgNameFront) as Texture2D;
+			Texture2D tex1 = (Texture2D)Resources.LoadAssetAtPath(imgNameFront, typeof(Texture2D));
 			imgFront.GetComponent<Renderer> ().material.mainTexture = tex1;
-		} else {
-			//imgFront.SetActive(false);
 		}
 
 		if (imgNameBack != null) {
 			imgBack = this.transform.Find ("Image Back").gameObject;
-			Texture2D tex2 = Resources.Load (imgNameBack) as Texture2D;
+			Texture2D tex2 = (Texture2D)Resources.LoadAssetAtPath(imgNameBack, typeof(Texture2D));
 			imgBack.GetComponent<Renderer> ().material.mainTexture = tex2;
-		} else {
-			//imgBack.SetActive(false);
 		}
 	}
 

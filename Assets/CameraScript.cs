@@ -8,11 +8,12 @@ public class CameraScript : MonoBehaviour
 	Vector3 shelfVector = new Vector3 (0, 2.3f, -2.82f);
 	float moveSpeed;
 	float rotateSpeed;
-	bool moveCamera = false;
-	int direction;
+	int actionType;
+	float moveMagnitude;
+
+	public readonly static int DO_NOTHING = 0;
 	public readonly static int TO_SHELF = 1;
 	public readonly static int TO_BOOK = 2;
-	float moveMagnitude;
 
 	// Use this for initialization
 	void Start ()
@@ -20,17 +21,16 @@ public class CameraScript : MonoBehaviour
 		moveMagnitude = (bookVector - shelfVector).magnitude;
 		moveSpeed = 0.2f * moveMagnitude;
 		rotateSpeed = 0.2f * 90;
-		moveCamera = true;
-		direction = TO_BOOK;
+		actionType = TO_BOOK;
 	}
 	
 	// Update is called once per frame
 	void Update ()
 	{
-		if (moveCamera) {
-			if (direction == TO_SHELF) {
+		if (actionType != DO_NOTHING) {
+			if (actionType == TO_SHELF) {
 				if ((transform.position - shelfVector).magnitude < 0.01f * moveMagnitude) {
-					moveCamera = false;
+					actionType = DO_NOTHING;
 					transform.position = shelfVector;
 					transform.eulerAngles = new Vector3(-90,0,0);
 				} else {
@@ -38,9 +38,9 @@ public class CameraScript : MonoBehaviour
 					transform.Translate (vDirection.normalized * moveSpeed * Time.deltaTime, Space.World);
 					transform.Rotate (Vector3.left * rotateSpeed * Time.deltaTime, Space.World);
 				}
-			} else if (direction == TO_BOOK) {
+			} else if (actionType == TO_BOOK) {
 				if ((transform.position - bookVector).magnitude < 0.01f * moveMagnitude) {
-					moveCamera = false;
+					actionType = DO_NOTHING;
 					transform.position = bookVector;
 					transform.eulerAngles = new Vector3(0,0,0);
 				} else {

@@ -2,62 +2,104 @@
 using System.Collections;
 
 /// <summary>
-/// The CPU that controls the entire application.</summary>
+/// Script for the CPU that controls the entire application.</summary>
 /// <remarks>
-/// Should be linked to n empty object</remarks>
-public class CPU_Script : MonoBehaviour {
+/// Should be linked to an empty object</remarks>
+public class CPU_Script : MonoBehaviour
+{
 
-	public GameObject LeapShelf, LeapTable, Camera;
+	/// <summary>
+	/// GameObject of the Leap Controller at the shelf.</summary>
+	public GameObject LeapShelf;
+	/// <summary>
+	/// GameObject of the Leap Controller at the table.</summary>
+	public GameObject LeapTable;
+	/// <summary>
+	/// GameObject of the Camera.</summary>
+	public GameObject Camera;
+	/// <summary>
+	/// Array of the GameObjects of the books.</summary>
 	public GameObject[] Books;
-	public AudioClip bookClose, bookTransition;
+	/// <summary>
+	/// Audio Clip to be played on book close.</summary>
+	public AudioClip bookClose;
+	/// <summary>
+	/// Audio Clip to be played on book transition/animation.</summary>
+	public AudioClip bookTransition;
 
-	// Use this for initialization
-	void Start () {
-		Camera.GetComponent<CameraScript>().moveToShelfInit();
+	/// <summary>
+	/// Called when the script is initialized.</summary>
+	void Start ()
+	{
+		Camera.GetComponent<CameraScript> ().moveToShelfInit ();
 		//onBookSelect (Books[1]);
 		//audioSource.Play ();
 		//AudioSource.PlayClipAtPoint (audioClip, Vector3.zero);
 		//onBookSelect (1);
 	}
 
-	public void onCameraInitFinish() {
+	/// <summary>
+	/// Called when camera has finished its initial animation. Activates the Leap Controller at the shelf.</summary>
+	public void onCameraInitFinish ()
+	{
 		LeapShelf.GetComponent<LeapScriptShelf> ().setActive ();
 	}
 
-	public void onBookOpenFinish(GameObject book) {
+	/// <summary>
+	/// Called when the book has finished opening. Plays audio effects.</summary>
+	/// <param name="book"> GameObject of the book that finished opening.</param>
+	public void onBookOpenFinish (GameObject book)
+	{
 		AudioSource.PlayClipAtPoint (bookClose, Vector3.zero);
 		LeapTable.GetComponent<LeapScriptTable> ().setActive (book);
 	}
 
-	public void onBookCloseFinish(GameObject book) {
+	/// <summary>
+	/// Called when the book has finished closing. Plays audio effects.</summary>
+	/// <param name="book"> GameObject of the book that finished closing.</param>
+	public void onBookCloseFinish (GameObject book)
+	{
 		AudioSource.PlayClipAtPoint (bookClose, Vector3.zero);
-		book.GetComponent<BookScript>().moveToShelf();
-		Camera.GetComponent<CameraScript>().moveToShelf();
+		book.GetComponent<BookScript> ().moveToShelf ();
+		Camera.GetComponent<CameraScript> ().moveToShelf ();
 		LeapTable.GetComponent<LeapScriptTable> ().setInactive ();
 		AudioSource.PlayClipAtPoint (bookTransition, Vector3.zero);
 
 	}
 
-	public void onBookReachesShelf() {
+	/// <summary>
+	/// Called when the book reaches the shelf and the animation is over.</summary>
+	public void onBookReachesShelf ()
+	{
 		LeapShelf.GetComponent<LeapScriptShelf> ().setActive ();
 	}
 
-	public void onBookSelected(GameObject book) {
-		book.GetComponent<BookScript>().moveToTable();
-		Camera.GetComponent<CameraScript>().moveToTable();
+	/// <summary>
+	/// Called when a book has been selected from the shelf.</summary>
+	/// <param name="book"> GameObject of the book that has been selected.</param>
+	public void onBookSelected (GameObject book)
+	{
+		book.GetComponent<BookScript> ().moveToTable ();
+		Camera.GetComponent<CameraScript> ().moveToTable ();
 		LeapShelf.GetComponent<LeapScriptShelf> ().setInactive ();
 	}
 
-	public void onBookSelect(int bookNum) {
+	/// <summary>
+	/// Called when a book has been selected from the shelf.</summary>
+	/// <param name="book"> Index of the book that has been selected.</param>
+	public void onBookSelect (int bookNum)
+	{
 		LeapShelf.GetComponent<LeapScriptShelf> ().setInactive ();
-		Books[bookNum].GetComponent<BookScript>().moveToTable();
-		Camera.GetComponent<CameraScript>().moveToTable();
+		Books [bookNum].GetComponent<BookScript> ().moveToTable ();
+		Camera.GetComponent<CameraScript> ().moveToTable ();
 		AudioSource.PlayClipAtPoint (bookTransition, Vector3.zero);
 
 	}
 	
-	// Update is called once per frame
-	void Update () {
+	/// <summary>
+	/// Function called on every new frame. Detects gestures and forwards the event.</summary>
+	void Update ()
+	{
 	
 	}
 }
